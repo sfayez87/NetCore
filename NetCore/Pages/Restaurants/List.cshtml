@@ -1,7 +1,7 @@
 ﻿@page
 @model NetCore.Pages.Restaurants.ListModel
 @{
-    ViewData["Title"] = "List";
+    ViewData["Title"] = "Restaurants";
 }
 
 <h1>Restaurants</h1>
@@ -9,4 +9,79 @@
 @Model.age
 @Model.Message
 
+
 <h1>Hello Hiiiii</h1>
+<br />
+<a asp-page="./Edit" class="btn btn-primary">Add New</a>
+<br />
+<br />
+<form method="get" class="form-group">
+    <div class="input-group">
+        <input type="search" asp-for="SearchTerm" class="form-control" />
+        <span class="input-group-btn">
+            <button class="btn btn-primary">
+                Search
+            </button>
+        </span>
+    </div>
+</form>
+@*@foreach (var restaurant in Model.Restaurants)
+    {
+        <partial name="_Summary" model="restaurant" />
+    }*@
+@*<table class="table table-hover">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Location</td>
+                <td>Cuisine</td>
+                <td>Action</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Restaurants)
+            {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+                <td>@item.Location</td>
+                <td>@item.Cuisine</td>
+                <td>
+                    <a asp-page="./Detail" asp-route-Resid="@item.Id" class="btn btn-danger">Show Detail</a>
+                    <a asp-page="./Edit" asp-route-Resid="@item.Id" class="btn btn-danger">Edit</a>
+                    <a asp-page="./Delete" asp-route-restaurantId="@item.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>*@
+
+<table id="Restaurants"></table>
+@section Scripts{
+    <link href="~/lib/datatables/css/dataTables.bootstrap4.css" rel="stylesheet" />
+    <link href="~/lib/datatables/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
+    <script src="~/lib/datatables/js/dataTables.dataTables.js"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
+    <script>
+        $(function () {
+            $.ajax("/api/Restaurants",
+                { method: "get" }).then(function (res) {
+                    console.log(res);
+                    var cuisineName = ["None", "Mexican", "Italian", "Indian"];
+                        $("#Restaurants").DataTable({
+                        data: res,
+                        columns: [
+                            { data: "name", title: "Name" },
+                            { data: "location", title: "Location" },
+                            {
+                                data: "cuisine", title: "Cuisine", render: function (data) {
+                                    return cuisineName[data];
+                                } }
+                        ]
+                    });
+                });
+        });
+    </script>
+} 
